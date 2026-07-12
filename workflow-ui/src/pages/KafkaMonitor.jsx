@@ -2,30 +2,24 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 
 function KafkaMonitor() {
-
     const [events, setEvents] = useState([]);
 
     const loadEvents = () => {
-
         api.get("/kafka/events")
             .then(res => setEvents(res.data))
             .catch(console.error);
-
     };
 
     useEffect(() => {
+        loadEvents();
 
-    loadEvents();
+        const interval = setInterval(loadEvents, 3000);
 
-    const interval = setInterval(loadEvents, 3000);
-
-    return () => clearInterval(interval);
-
-}, []);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <>
-
             <h1>Kafka Event Monitor</h1>
 
             <p
@@ -38,29 +32,18 @@ function KafkaMonitor() {
             </p>
 
             <table style={table}>
-
                 <thead>
-
                     <tr>
-
                         <th style={head}>Event</th>
-
                         <th style={head}>Execution</th>
-
                         <th style={head}>Task</th>
-
                         <th style={head}>Message</th>
-
                     </tr>
-
                 </thead>
 
                 <tbody>
-
                     {events.map((event, index) => (
-
                         <tr key={index}>
-
                             <td style={cell}>
                                 {event.eventType}
                             </td>
@@ -76,18 +59,12 @@ function KafkaMonitor() {
                             <td style={cell}>
                                 {event.message}
                             </td>
-
                         </tr>
-
                     ))}
-
                 </tbody>
-
             </table>
-
         </>
     );
-
 }
 
 const table = {

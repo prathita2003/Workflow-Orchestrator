@@ -1,19 +1,27 @@
 import { useNavigate } from "react-router-dom";
-function ProfilePage()
-{
-    const navigate=useNavigate();
-    const username=localStorage.getItem("username");
-    const role=localStorage.getItem("role");
-    return(
-        <>
-        <button style={backButton} onClick={()=>navigate(-1)}>
-            ← Back
-        </button>
-        <h1>My Profile</h1>
-        <div style={card}>
-            <h2 style={{marginBottom:"30px"}}>👤 User Information</h2>
 
-        <div style={row}>
+function ProfilePage() {
+    const navigate = useNavigate();
+    const username = localStorage.getItem("username");
+    const role = localStorage.getItem("role");
+
+    return (
+        <>
+            <button
+                style={backButton}
+                onClick={() => navigate(-1)}
+            >
+                ← Back
+            </button>
+
+            <h1>My Profile</h1>
+
+            <div style={card}>
+                <h2 style={{ marginBottom: "30px" }}>
+                    👤 User Information
+                </h2>
+
+                <div style={row}>
                     <b>Username</b>
                     <span>{username}</span>
                 </div>
@@ -34,11 +42,9 @@ function ProfilePage()
                         Active
                     </span>
                 </div>
-
             </div>
 
             <div style={card}>
-
                 <h2>Password</h2>
 
                 <p style={{ color: "#6B7280" }}>
@@ -48,13 +54,9 @@ function ProfilePage()
                 <button style={button}>
                     Change Password
                 </button>
-
             </div>
-
         </>
-
     );
-
 }
 
 const backButton = {

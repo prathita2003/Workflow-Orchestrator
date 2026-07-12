@@ -34,6 +34,7 @@ function App()
       <Route path="/kafka" element={<ProtectedRoute><Layout><KafkaMonitor /></Layout></ProtectedRoute>} />
       <Route path="/users" element={<Layout><Users /></Layout>} />
       <Route path="/ml" element={<ProtectedRoute><Layout><MLInsights /></Layout></ProtectedRoute>} />
+      <Route path="/workflows/edit/:id" element={<ProtectedRoute><Layout><CreateWorkflow /></Layout></ProtectedRoute>} />
     </Routes>
     </BrowserRouter>
   );

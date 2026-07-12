@@ -3,128 +3,81 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 
 function ExecutionDetails() {
-
     const { id } = useParams();
-
     const navigate = useNavigate();
 
     const role = localStorage.getItem("role");
 
     const [execution, setExecution] = useState(null);
-
     const [tasks, setTasks] = useState([]);
-
     const [loading, setLoading] = useState(true);
 
     const loadExecution = () => {
-
         Promise.all([
             api.get(`/executions/${id}`),
             api.get(`/executions/${id}/allTasks`)
         ])
             .then(([executionResponse, taskResponse]) => {
-
                 setExecution(executionResponse.data);
-
                 setTasks(taskResponse.data);
-
                 setLoading(false);
-
             })
             .catch(error => {
-
                 console.error(error);
-
                 alert("Failed to load execution.");
-
                 setLoading(false);
-
             });
-
     };
 
     useEffect(() => {
-
         loadExecution();
 
         const interval = setInterval(() => {
-
             loadExecution();
-
         }, 5000);
 
         return () => clearInterval(interval);
-
     }, [id]);
 
-    const completeTask = async (taskId) => {
-
+    const completeTask = async taskId => {
         try {
-
             await api.post(`/executions/${id}/tasks/${taskId}/complete`);
 
             alert("Task completed.");
 
             loadExecution();
-
-        }
-
-        catch (err) {
-
+        } catch (err) {
             console.error(err);
-
             alert("Failed to complete task.");
-
         }
-
     };
 
-    const failTask = async (taskId) => {
-
+    const failTask = async taskId => {
         try {
-
             await api.post(`/executions/${id}/tasks/${taskId}/fail`);
 
             alert("Task failure processed.");
 
             loadExecution();
-
-        }
-
-        catch (err) {
-
+        } catch (err) {
             console.error(err);
-
             alert("Failed.");
-
         }
-
     };
 
-    const retryTask = async (taskId) => {
+    const retryTask = async taskId => {
+        try {
+            await api.post(`/executions/${id}/tasks/${taskId}/retry`);
 
-    try{
+            loadExecution();
+        } catch (err) {
+            console.error(err);
+            alert("Retry failed.");
+        }
+    };
 
-        await api.post(`/executions/${id}/tasks/${taskId}/retry`);
-
-        loadExecution();
-
-    }
-
-    catch(err){
-
-        console.error(err);
-
-        alert("Retry failed.");
-
-    }
-
-};
-
-    const getStatusStyle = (status) => {
-
+    const getStatusStyle = status => {
         switch (status) {
-
             case "COMPLETED":
                 return completedStatus;
 
@@ -134,29 +87,24 @@ function ExecutionDetails() {
             case "RUNNING":
                 return runningStatus;
 
+            case "STOPPED":
+                return stoppedStatus;
+
             default:
                 return pendingStatus;
-
         }
-
     };
 
     if (loading) {
-
         return <h2>Loading Execution...</h2>;
-
     }
 
     if (!execution) {
-
         return <h2>Execution not found.</h2>;
-
     }
 
     return (
-
         <>
-
             <button
                 style={backButton}
                 onClick={() => navigate("/executions")}
@@ -165,9 +113,7 @@ function ExecutionDetails() {
             </button>
 
             <h1>
-
                 Execution #{execution.id}
-
             </h1>
 
             <p
@@ -180,173 +126,136 @@ function ExecutionDetails() {
             </p>
 
             <div style={infoCard}>
-
                 <div style={infoItem}>
-
                     <h3>Workflow</h3>
 
                     <h2>{execution.workflowName}</h2>
-
                 </div>
 
                 <div style={infoItem}>
-
                     <h3>Status</h3>
 
                     <span style={getStatusStyle(execution.status)}>
-
                         {execution.status}
-
                     </span>
 
+                    <br />
+                    <br />
+
+                    {execution.status === "RUNNING" && (
+                        <button
+                            style={stopButton}
+                            onClick={stopWorkflow}
+                        >
+                            ⏹ Stop Workflow
+                        </button>
+                    )}
+
+                    {execution.status === "STOPPED" && (
+                        <button
+                            style={resumeButton}
+                            onClick={resumeWorkflow}
+                        >
+                            ▶ Resume Workflow
+                        </button>
+                    )}
                 </div>
 
                 <div style={infoItem}>
-
                     <h3>Started</h3>
 
                     <p>
-
                         {execution.startTime
                             ? new Date(execution.startTime).toLocaleString()
                             : "-"}
-
                     </p>
-
                 </div>
 
                 <div style={infoItem}>
-
                     <h3>Finished</h3>
 
                     <p>
-
                         {execution.endTime
                             ? new Date(execution.endTime).toLocaleString()
                             : "-"}
-
                     </p>
-
                 </div>
-
             </div>
 
             <h2 style={sectionTitle}>
-
                 Task Executions
-
             </h2>
 
             <table style={tableStyle}>
-
                 <thead>
-
                     <tr>
-
                         <th style={headerCell}>Task</th>
-
                         <th style={headerCell}>Type</th>
-
                         <th style={headerCell}>Status</th>
-
                         <th style={headerCell}>Retries</th>
-
                         <th style={headerCell}>Actions</th>
-
                     </tr>
-
                 </thead>
 
                 <tbody>
-
                     {tasks.map(task => (
-
                         <tr key={task.taskId}>
-
                             <td style={bodyCell}>
-
                                 {task.taskName}
-
                             </td>
 
                             <td style={bodyCell}>
-
                                 {task.taskType}
-
                             </td>
 
                             <td style={bodyCell}>
-
                                 <span style={getStatusStyle(task.status)}>
-
                                     {task.status}
-
                                 </span>
-
                             </td>
 
                             <td style={bodyCell}>
-
                                 {task.retryCount}
-
                             </td>
 
                             <td style={bodyCell}>
+                                {role === "ROLE_ADMIN" && (
+                                    <>
+                                        {task.status === "RUNNING" && (
+                                            <button
+                                                style={completeButton}
+                                                onClick={() => completeTask(task.taskId)}
+                                            >
+                                                Complete
+                                            </button>
+                                        )}
 
-                                {role === "ROLE_ADMIN" &&
+                                        {task.status === "RUNNING" && (
+                                            <button
+                                                style={failButton}
+                                                onClick={() => failTask(task.taskId)}
+                                            >
+                                                Fail
+                                            </button>
+                                        )}
 
-                                        <>
-                                                                                    {task.status==="RUNNING" &&
-
-<button
-style={completeButton}
-onClick={()=>completeTask(task.taskId)}
->
-Complete
-</button>
-
-}
-
-{task.status==="RUNNING" &&
-
-<button
-style={failButton}
-onClick={()=>failTask(task.taskId)}
->
-Fail
-</button>
-
-}
-
-{task.status==="FAILED" &&
-
-<button
-style={retryButton}
-onClick={()=>retryTask(task.taskId)}
->
-Retry
-</button>
-
-}
-
-                                        </>
-
-                                    }
-
+                                        {task.status === "FAILED" && (
+                                            <button
+                                                style={retryButton}
+                                                onClick={() => retryTask(task.taskId)}
+                                            >
+                                                Retry
+                                            </button>
+                                        )}
+                                    </>
+                                )}
                             </td>
-
                         </tr>
-
                     ))}
-
                 </tbody>
-
             </table>
-
         </>
-
     );
-
 }
 
 const infoCard = {
@@ -356,12 +265,13 @@ const infoCard = {
     marginBottom: "35px"
 };
 
-const infoItem = {
-    background: "white",
-    padding: "20px",
-    borderRadius: "10px",
-    textAlign: "center",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+const infoItem={
+    background:"#FFF",
+    padding:"28px",
+    borderRadius:"18px",
+    textAlign:"center",
+    boxShadow:"0 8px 24px rgba(0,0,0,.08)",
+    border:"1px solid #E5E7EB"
 };
 
 const sectionTitle = {
@@ -379,7 +289,8 @@ const tableStyle = {
 };
 
 const headerCell = {
-    background: "#F3F4F6",
+    background: "#2563EB",
+    color: "white",
     padding: "14px",
     textAlign: "left",
     borderBottom: "1px solid #E5E7EB"
@@ -407,7 +318,10 @@ const completeButton = {
     padding: "8px 14px",
     borderRadius: "6px",
     cursor: "pointer",
-    marginRight: "8px"
+    marginRight: "8px",
+    transition: "0.2s",
+    fontWeight: "600",
+    boxShadow: "0 3px 8px rgba(34,197,94,.3)"
 };
 
 const failButton = {
@@ -417,7 +331,10 @@ const failButton = {
     padding: "8px 14px",
     borderRadius: "6px",
     cursor: "pointer",
-    marginRight: "8px"
+    marginRight: "8px",
+    transition: "0.2s",
+    fontWeight: "600",
+    boxShadow: "0 3px 8px rgba(34,197,94,.3)"
 };
 
 const retryButton = {
@@ -426,7 +343,10 @@ const retryButton = {
     border: "none",
     padding: "8px 14px",
     borderRadius: "6px",
-    cursor: "pointer"
+    cursor: "pointer",
+    transition: "0.2s",
+    fontWeight: "600",
+    boxShadow: "0 3px 8px rgba(220, 170, 19, 0.77)"
 };
 
 const completedStatus = {
@@ -456,6 +376,38 @@ const pendingStatus = {
 const failedStatus = {
     background: "#FEE2E2",
     color: "#B91C1C",
+    padding: "6px 12px",
+    borderRadius: "20px",
+    fontWeight: "600"
+};
+
+const stopButton = {
+    background: "#DC2626",
+    color: "white",
+    border: "none",
+    padding: "10px 18px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "0.2s",
+    fontWeight: "600",
+    boxShadow: "0 3px 8px rgba(197, 34, 34, 0.63)"
+};
+
+const resumeButton = {
+    background: "#16A34A",
+    color: "white",
+    border: "none",
+    padding: "10px 18px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "0.2s",
+    fontWeight: "600",
+    boxShadow: "0 3px 8px rgba(34,197,94,.3)"
+};
+
+const stoppedStatus = {
+    background: "#F3F4F6",
+    color: "#374151",
     padding: "6px 12px",
     borderRadius: "20px",
     fontWeight: "600"

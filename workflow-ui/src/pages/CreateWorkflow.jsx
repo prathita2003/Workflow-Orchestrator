@@ -1,12 +1,11 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import WorkflowCanvas from "../components/WorkflowCanvas";
-import { useParams } from "react-router-dom";
 
 function CreateWorkflow() {
-
     const navigate = useNavigate();
+
     const [workflowName, setWorkflowName] = useState("");
     const [tasks, setTasks] = useState([
         {
@@ -15,10 +14,27 @@ function CreateWorkflow() {
             type: "REST"
         }
     ]);
-    const {id}=useParams();
-    const editing=Boolean(id);
-
     const [dependencies, setDependencies] = useState([]);
+
+    const { id } = useParams();
+    const editing = Boolean(id);
+
+    useEffect(() => {
+        if (!editing) return;
+
+        api.get(`/workflows/${id}`)
+            .then(res => {
+                const workflow = res.data;
+
+                setWorkflowName(workflow.name);
+                setTasks(workflow.tasks);
+                setDependencies(workflow.dependencies);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Failed to load workflow.");
+            });
+    }, [editing, id]);
 
     const addTask = () => {
         setTasks([
@@ -31,7 +47,7 @@ function CreateWorkflow() {
         ]);
     };
 
-    const removeTask = (index) => {
+    const removeTask = index => {
         const updated = [...tasks];
         updated.splice(index, 1);
         setTasks(updated);
@@ -44,7 +60,6 @@ function CreateWorkflow() {
     };
 
     const addDependency = () => {
-
         if (tasks.length < 2) {
             alert("At least 2 tasks are required.");
             return;
@@ -57,7 +72,6 @@ function CreateWorkflow() {
                 to: tasks[1].id
             }
         ]);
-
     };
 
     const updateDependency = (index, field, value) => {
@@ -66,14 +80,13 @@ function CreateWorkflow() {
         setDependencies(updated);
     };
 
-    const removeDependency = (index) => {
+    const removeDependency = index => {
         const updated = [...dependencies];
         updated.splice(index, 1);
         setDependencies(updated);
     };
 
     const saveWorkflow = () => {
-
         if (workflowName.trim() === "") {
             alert("Enter workflow name");
             return;
@@ -92,54 +105,81 @@ function CreateWorkflow() {
             dependencies
         };
 
-        console.log(payload);
+        const request = editing
+            ? api.put(`/workflows/${id}`, payload)
+            : api.post("/workflows", payload);
 
-        api.post("/workflows", payload)
+        request
             .then(() => {
-                alert("Workflow created successfully!");
+                alert(
+                    editing
+                        ? "Workflow updated successfully!"
+                        : "Workflow created successfully!"
+                );
+
                 navigate("/workflows");
             })
             .catch(err => {
                 console.error(err);
-                alert("Failed to create workflow.");
-            });
 
+                const message =
+                    err.response?.data?.msg ||
+                    err.response?.data?.message ||
+                    (editing
+                        ? "Failed to update workflow."
+                        : "Failed to create workflow.");
+
+                alert(message);
+            });
     };
 
     return (
         <>
-            <h1>Create Workflow</h1>
+            <h1>{editing ? "Edit Workflow" : "Create Workflow"}</h1>
 
-            <p style={{ color: "#6B7280", marginBottom: "25px" }}>
+            <p
+                style={{
+                    color: "#6B7280",
+                    marginBottom: "25px"
+                }}
+            >
                 Build a workflow using tasks and dependencies.
             </p>
+
+            <button
+                style={backButton}
+                onClick={() => navigate("/workflows")}
+            >
+                ← Back to Workflows
+            </button>
 
             <input
                 style={input}
                 placeholder="Workflow Name"
                 value={workflowName}
-                onChange={(e) => setWorkflowName(e.target.value)}
+                onChange={e => setWorkflowName(e.target.value)}
             />
 
             <h2>Tasks</h2>
 
             {tasks.map((task, index) => (
-
-                <div key={task.id} style={card}>
-
+                <div
+                    key={task.id}
+                    style={card}
+                >
                     <h3>{task.id}</h3>
 
                     <input
                         style={input}
                         placeholder="Task Name"
                         value={task.name}
-                        onChange={(e) => updateTask(index, "name", e.target.value)}
+                        onChange={e => updateTask(index, "name", e.target.value)}
                     />
 
                     <select
                         style={input}
                         value={task.type}
-                        onChange={(e) => updateTask(index, "type", e.target.value)}
+                        onChange={e => updateTask(index, "type", e.target.value)}
                     >
                         <option value="REST">🌐 REST</option>
                         <option value="DATABASE">🗄 DATABASE</option>
@@ -149,45 +189,65 @@ function CreateWorkflow() {
                         <option value="EMAIL">✉ EMAIL</option>
                     </select>
 
-                    <button style={deleteButton} onClick={() => removeTask(index)}>
+                    <button
+                        style={deleteButton}
+                        onClick={() => removeTask(index)}
+                    >
                         Remove Task
                     </button>
-
                 </div>
-
             ))}
 
-            <button style={greenButton} onClick={addTask}>
+            <button
+                style={greenButton}
+                onClick={addTask}
+            >
                 + Add Task
             </button>
 
-            <h2 style={{ marginTop: "40px" }}>Dependencies</h2>
+            <h2 style={{ marginTop: "40px" }}>
+                Dependencies
+            </h2>
 
             {dependencies.map((dependency, index) => (
-
-                <div key={index} style={card}>
-
+                <div
+                    key={index}
+                    style={card}
+                >
                     <select
                         style={input}
                         value={dependency.from}
-                        onChange={(e) => updateDependency(index, "from", e.target.value)}
+                        onChange={e =>
+                            updateDependency(index, "from", e.target.value)
+                        }
                     >
                         {tasks.map(task => (
-                            <option key={task.id}>{task.id}</option>
+                            <option key={task.id}>
+                                {task.id}
+                            </option>
                         ))}
                     </select>
 
-                    <div style={{ textAlign: "center", fontSize: "28px" }}>
+                    <div
+                        style={{
+                            textAlign: "center",
+                            fontSize: "28px"
+                        }}
+                    >
                         ↓
                     </div>
 
                     <select
                         style={input}
                         value={dependency.to}
-                        onChange={(e) => updateDependency(index, "to", e.target.value)}
+                        onChange={e =>
+                            updateDependency(index, "to", e.target.value)
+                        }
                     >
                         {tasks.map(task => (
-                            <option key={task.id}>{task.id}</option>
+                            <option key={task.id}>
+                                {task.id}
+                            </option>
                         ))}
                     </select>
 
@@ -197,36 +257,35 @@ function CreateWorkflow() {
                     >
                         Remove Dependency
                     </button>
-
                 </div>
-
             ))}
 
             <button
-    style={greenButton}
-    onClick={addDependency}
->
-    + Add Dependency
-</button>
+                style={greenButton}
+                onClick={addDependency}
+            >
+                + Add Dependency
+            </button>
 
-<h2 style={{ marginTop: "40px" }}>
-    Visual Workflow
-</h2>
+            <h2 style={{ marginTop: "40px" }}>
+                Visual Workflow
+            </h2>
 
-<WorkflowCanvas
-    tasks={tasks}
-    dependencies={dependencies}
-    onDependenciesChange={setDependencies}
-/>
+            <WorkflowCanvas
+                tasks={tasks}
+                dependencies={dependencies}
+                onDependenciesChange={setDependencies}
+            />
 
-<br /><br />
+            <br />
+            <br />
 
-<button
-    style={blueButton}
-    onClick={saveWorkflow}
->
-    Save Workflow
-</button>
+            <button
+                style={blueButton}
+                onClick={saveWorkflow}
+            >
+                {editing ? "Update Workflow" : "Save Workflow"}
+            </button>
         </>
     );
 }
@@ -299,4 +358,15 @@ const previewArrow = {
     margin: "15px 0",
     textAlign: "center"
 };
+
+const backButton = {
+    background: "none",
+    border: "none",
+    color: "#2563EB",
+    cursor: "pointer",
+    fontSize: "16px",
+    marginBottom: "20px",
+    fontWeight: "600"
+};
+
 export default CreateWorkflow;

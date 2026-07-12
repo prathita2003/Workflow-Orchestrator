@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 
 function Users() {
-
     const [users, setUsers] = useState([]);
 
     const [newUser, setNewUser] = useState({
@@ -12,11 +11,9 @@ function Users() {
     });
 
     const loadUsers = () => {
-
         api.get("/users")
             .then(res => setUsers(res.data))
             .catch(console.error);
-
     };
 
     useEffect(() => {
@@ -24,9 +21,7 @@ function Users() {
     }, []);
 
     const createUser = async () => {
-
         try {
-
             await api.post("/users", newUser);
 
             setNewUser({
@@ -36,63 +31,43 @@ function Users() {
             });
 
             loadUsers();
-
         } catch (err) {
-
             console.error(err);
-
             alert("Failed to create user.");
-
         }
-
     };
 
-    const deleteUser = async (id) => {
-
-        if (!window.confirm("Delete this user?"))
+    const deleteUser = async id => {
+        if (!window.confirm("Delete this user?")) {
             return;
+        }
 
         try {
-
             await api.delete(`/users/${id}`);
 
             loadUsers();
-
         } catch (err) {
-
             console.error(err);
-
             alert("Delete failed.");
-
         }
-
     };
 
     const changeRole = async (id, role) => {
-
         try {
-
             await api.put(`/users/${id}/role?role=${role}`);
 
             loadUsers();
-
         } catch (err) {
-
             console.error(err);
-
             alert("Role update failed.");
-
         }
-
     };
 
     return (
         <>
-
             <h1>User Management</h1>
 
             <div style={card}>
-
                 <input
                     placeholder="Username"
                     value={newUser.username}
@@ -136,37 +111,29 @@ function Users() {
                 >
                     Create User
                 </button>
-
             </div>
 
             <table style={table}>
-
                 <thead>
-
                     <tr>
-
                         <th style={head}>Username</th>
-
                         <th style={head}>Role</th>
-
                         <th style={head}>Actions</th>
-
                     </tr>
-
                 </thead>
 
                 <tbody>
-
                     {users.map(user => (
-
                         <tr key={user.id}>
-
-                            <td style={cell}>{user.username}</td>
-
-                            <td style={cell}>{user.role}</td>
+                            <td style={cell}>
+                                {user.username}
+                            </td>
 
                             <td style={cell}>
+                                {user.role}
+                            </td>
 
+                            <td style={cell}>
                                 <select
                                     value={user.role}
                                     onChange={e =>
@@ -187,20 +154,13 @@ function Users() {
                                 >
                                     Delete
                                 </button>
-
                             </td>
-
                         </tr>
-
                     ))}
-
                 </tbody>
-
             </table>
-
         </>
     );
-
 }
 
 const card = {

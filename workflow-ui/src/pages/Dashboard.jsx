@@ -3,11 +3,9 @@ import api from "../services/api";
 import StatusBadge from "../components/StatusBadge";
 
 function Dashboard() {
-
     const [executions, setExecutions] = useState([]);
 
     useEffect(() => {
-
         api.get("/executions")
             .then(response => {
                 console.log(response.data);
@@ -16,12 +14,10 @@ function Dashboard() {
             .catch(error => {
                 console.error(error);
             });
-
     }, []);
 
     return (
         <>
-
             <h1>Dashboard</h1>
 
             <p
@@ -34,44 +30,42 @@ function Dashboard() {
                 Monitor, execute, and manage distributed workflows from one place.
             </p>
 
-            <hr />
-
-            <div
-                style={{
-                    display: "flex",
-                    gap: "20px",
-                    marginTop: "25px"
-                }}
-            >
-
+            <div style={cardsContainer}>
                 <div style={cardStyle}>
+                    <div style={iconCircle}>📁</div>
                     <h2 style={numberStyle}>
                         {[...new Set(executions.map(e => e.workflowId))].length}
                     </h2>
-                    <p>Workflows</p>
+                    <h3>Workflows</h3>
+                    <p style={subtitle}>Total Workflows</p>
                 </div>
 
                 <div style={cardStyle}>
+                    <div style={iconCircle}>▶</div>
                     <h2 style={numberStyle}>
                         {executions.filter(e => e.status === "RUNNING").length}
                     </h2>
-                    <p>Running</p>
+                    <h3>Running</h3>
+                    <p style={subtitle}>Active executions</p>
                 </div>
 
                 <div style={cardStyle}>
+                    <div style={iconCircle}>✅</div>
                     <h2 style={numberStyle}>
                         {executions.filter(e => e.status === "COMPLETED").length}
                     </h2>
-                    <p>Completed</p>
+                    <h3>Completed</h3>
+                    <p style={subtitle}>Successful executions</p>
                 </div>
 
                 <div style={cardStyle}>
+                    <div style={iconCircle}>❌</div>
                     <h2 style={numberStyle}>
                         {executions.filter(e => e.status === "FAILED").length}
                     </h2>
-                    <p>Failed</p>
+                    <h3>Failed</h3>
+                    <p style={subtitle}>Needs attention</p>
                 </div>
-
             </div>
 
             <h2
@@ -84,7 +78,6 @@ function Dashboard() {
             </h2>
 
             <table style={tableStyle}>
-
                 <thead>
                     <tr>
                         <th style={headerCell}>ID</th>
@@ -95,15 +88,12 @@ function Dashboard() {
                 </thead>
 
                 <tbody>
-
                     {executions
                         .slice()
                         .sort((a, b) => new Date(b.startTime) - new Date(a.startTime))
                         .slice(0, 5)
                         .map(execution => (
-
                             <tr key={execution.id}>
-
                                 <td style={bodyCell}>
                                     {execution.id}
                                 </td>
@@ -122,32 +112,30 @@ function Dashboard() {
                                         timeStyle: "short"
                                     })}
                                 </td>
-
                             </tr>
-
                         ))}
-
                 </tbody>
-
             </table>
-
         </>
     );
 }
 
 const numberStyle = {
-    fontSize: "38px",
-    marginBottom: "10px"
+    fontSize: "46px",
+    color: "#2563EB",
+    margin: "18px 0 10px"
 };
 
 const cardStyle = {
     flex: 1,
     background: "#FFFFFF",
-    borderRadius: "12px",
-    padding: "25px",
+    borderRadius: "18px",
+    padding: "30px",
     textAlign: "center",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-    borderTop: "4px solid #2563EB"
+    boxShadow: "0 8px 24px rgba(0,0,0,.08)",
+    transition: "0.25s",
+    cursor: "pointer",
+    border: "1px solid #E5E7EB"
 };
 
 const tableStyle = {
@@ -162,7 +150,8 @@ const tableStyle = {
 
 const headerCell = {
     padding: "14px",
-    background: "#F3F4F6",
+    background: "#2563EB",
+    color: "white",
     textAlign: "left",
     borderBottom: "1px solid #E5E7EB"
 };
@@ -170,6 +159,30 @@ const headerCell = {
 const bodyCell = {
     padding: "14px",
     borderBottom: "1px solid #E5E7EB"
+};
+
+const iconCircle = {
+    width: "70px",
+    height: "70px",
+    margin: "0 auto",
+    borderRadius: "50%",
+    background: "#DBEAFE",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "34px"
+};
+
+const subtitle = {
+    color: "#6B7280",
+    marginTop: "8px"
+};
+
+const cardsContainer = {
+    display: "grid",
+    gridTemplateColumns: "repeat(4,1fr)",
+    gap: "25px",
+    marginTop: "35px"
 };
 
 export default Dashboard;

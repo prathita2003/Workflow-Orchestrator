@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
 
 function LoginPage() {
-
     const navigate = useNavigate();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
     const login = async () => {
         try {
             const response = await axios.post(
@@ -17,19 +17,20 @@ function LoginPage() {
                     password
                 }
             );
-            localStorage.setItem("token",response.data.token);
-            localStorage.setItem("username",response.data.username);
-            localStorage.setItem("role",response.data.role);
+
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("username", response.data.username);
+            localStorage.setItem("role", response.data.role);
+
             navigate("/dashboard");
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err);
             alert("Invalid Username or Password");
         }
     };
-    if(localStorage.getItem("token"))
-    {
-        return <Navigate to="/dashboard" />
+
+    if (localStorage.getItem("token")) {
+        return <Navigate to="/dashboard" />;
     }
 
     return (
@@ -42,7 +43,6 @@ function LoginPage() {
                 background: "#F3F4F6"
             }}
         >
-
             <div
                 style={{
                     width: "400px",
@@ -52,7 +52,6 @@ function LoginPage() {
                     boxShadow: "0 4px 15px rgba(0,0,0,0.15)"
                 }}
             >
-
                 <h1
                     style={{
                         textAlign: "center",
@@ -63,48 +62,39 @@ function LoginPage() {
                 </h1>
 
                 <form
-    onSubmit={(e) => {
-        e.preventDefault();
-        login();
-    }}
->
+                    onSubmit={e => {
+                        e.preventDefault();
+                        login();
+                    }}
+                >
+                    <input
+                        style={input}
+                        placeholder="Username"
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
+                    />
 
-    <input
-        style={input}
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-    />
+                    <input
+                        style={input}
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                    />
 
-    <input
-        style={input}
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-    />
-
-    <button
-        style={button}
-        type="submit"
-    >
-        Login
-    </button>
-
-</form>
-
-                
-
+                    <button
+                        style={button}
+                        type="submit"
+                    >
+                        Login
+                    </button>
+                </form>
             </div>
-
         </div>
-
     );
-
 }
 
 const input = {
-
     width: "100%",
     padding: "12px",
     marginBottom: "20px",
@@ -115,7 +105,6 @@ const input = {
 };
 
 const button = {
-
     width: "100%",
     padding: "12px",
     background: "#2563EB",

@@ -1,9 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 
 function Navbar() {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const [open, setOpen] = useState(false);
     const menuRef = useRef();
     const role=localStorage.getItem("role");
@@ -33,7 +34,15 @@ function Navbar() {
             style={{
                 backgroundColor: "#1F2937",
                 color: "white",
-                padding: "18px 40px",
+                padding:"16px 40px",
+
+boxShadow:"0 6px 18px rgba(0,0,0,.12)",
+
+position:"sticky",
+
+top:0,
+
+zIndex:999,
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center"
@@ -49,7 +58,7 @@ function Navbar() {
         fontWeight:"bold"
     }}
 >
-    Workflow Orchestrator
+    ⚙ Workflow Orchestrator
 </Link>
 
             <div
@@ -60,27 +69,57 @@ function Navbar() {
                 }}
             >
 
-                <Link to="/dashboard" style={linkStyle}>
-                    🏠 Dashboard
+                <Link to="/dashboard" style={{
+        ...linkStyle,
+        ...(location.pathname.startsWith("/dashboard")
+            ? activeLink
+            : {})
+    }}>
+                    🏠 Dashboard 
                 </Link>
 
-                <Link to="/workflows" style={linkStyle}>
-                    ⚙ Workflows
+                <Link to="/workflows"style={{
+        ...linkStyle,
+        ...(location.pathname.startsWith("/workflows")
+            ? activeLink
+            : {})
+    }}>
+                    ⚙ Workflows 
                 </Link>
 
-                <Link to="/executions" style={linkStyle}>
-                    ▶ Executions
+                <Link to="/executions" style={{
+        ...linkStyle,
+        ...(location.pathname.startsWith("/executions")
+            ? activeLink
+            : {})
+    }}>
+                    ▶ Executions 
                 </Link>
 
-                <Link to="/ml" style={linkStyle}>
-                    🤖 ML Insights
+                <Link to="/ml" style={{
+        ...linkStyle,
+        ...(location.pathname.startsWith("/ml")
+            ? activeLink
+            : {})
+    }}>
+                    🤖 ML Insights 
                 </Link>
-                <Link to="/kafka" style={linkStyle}>
-                    🛰 Kafka
+                <Link to="/kafka" style={{
+        ...linkStyle,
+        ...(location.pathname.startsWith("/kafka")
+            ? activeLink
+            : {})
+    }}>
+                    🛰 Kafka 
                 </Link>
                 {role === "ROLE_ADMIN" && (
-                    <Link to="/users" style={linkStyle}>
-                        👥 Users
+                    <Link to="/users" style={{
+        ...linkStyle,
+        ...(location.pathname.startsWith("/users")
+            ? activeLink
+            : {})
+    }}>
+                        👥 Users 
                     </Link>
 )}
 
@@ -119,7 +158,7 @@ function Navbar() {
 
                             }}
                         >
-                            👤 My Profile
+                            👤 My Profile 
                         </div>
 
                         <div
@@ -132,7 +171,7 @@ function Navbar() {
 
                             }}
                         >
-                            ⚙ Settings
+                            ⚙ Settings 
                         </div>
 
                         <div
@@ -160,11 +199,11 @@ function Navbar() {
 
 const linkStyle = {
 
-    color: "white",
+    color:"white",
 
-    textDecoration: "none",
+    textDecoration:"none",
 
-    fontWeight: "500"
+    fontWeight:"500"
 
 };
 
@@ -217,5 +256,11 @@ const menuItem = {
     borderBottom: "1px solid #E5E7EB"
 
 };
-
+const activeLink = {
+    background: "#2F01AF",
+    color: "white",
+    padding: "10px 18px",
+    borderRadius: "9999px",
+    boxShadow: "0 4px 12px rgba(37,99,235,.35)"
+};
 export default Navbar;

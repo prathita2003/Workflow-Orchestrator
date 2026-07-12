@@ -1,0 +1,27 @@
+# Java
+backend/target/
+*.class
+*.log
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# React
+frontend/node_modules/
+frontend/dist/
+
+# Python
+ml-service/__pycache__/
+ml-service/*.pyc
+ml-service/workflow_model.pkl
+ml-service/.venv/
+ml-service/venv/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

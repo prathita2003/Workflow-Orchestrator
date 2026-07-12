@@ -51,6 +51,25 @@ function ExecutionMonitor() {
     }
 
 };
+const stopWorkflow = async () => {
+    try {
+        await api.post(`/executions/${id}/stop`);
+        loadExecution();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to stop workflow.");
+    }
+};
+
+const resumeWorkflow = async () => {
+    try {
+        await api.post(`/executions/${id}/resume`);
+        loadExecution();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to resume workflow.");
+    }
+};
 
 const failTask = async (taskId) => {
 
@@ -169,9 +188,62 @@ const retryTask = async (taskId) => {
                 </div>
 
             </div>
-            <button style={auditButton} onClick={()=>navigate(`/audit/${execution.id}`)}>
-                📋 View Audit Timeline
-            </button>
+            <div
+    style={{
+        display: "flex",
+        gap: "15px",
+        marginBottom: "30px"
+    }}
+>
+
+    <button
+        style={auditButton}
+        onClick={() => navigate(`/audit/${execution.id}`)}
+        onMouseEnter={(e)=>{
+        e.target.style.background="#1D4ED8";
+        }}
+        onMouseLeave={(e)=>{
+        e.target.style.background="#2563EB";
+        }}
+    >
+        📋 View Audit Timeline
+    </button>
+
+    {execution.status === "RUNNING" && (
+
+        <button
+            style={stopButton}
+            onClick={stopWorkflow}
+            onMouseEnter={(e)=>{
+            e.target.style.background="#B91C1C";
+            }}
+            onMouseLeave={(e)=>{
+            e.target.style.background="#DC2626";
+            }}
+        >
+            ⏹ Stop Workflow
+        </button>
+
+    )}
+
+    {execution.status === "STOPPED" && (
+
+        <button
+            style={resumeButton}
+            onClick={resumeWorkflow}
+            onMouseEnter={(e)=>{
+        e.target.style.background="#15803D";
+        }}
+        onMouseLeave={(e)=>{
+        e.target.style.background="#16A34A";
+        }}
+        >
+            ▶ Resume Workflow
+        </button>
+
+    )}
+
+</div>
 
             <h2
                 style={{
@@ -226,19 +298,37 @@ const retryTask = async (taskId) => {
 {true && (
 
 <>
+{task.status === "RUNNING" && (
+
+<>
 <button
-style={completeButton}
-onClick={()=>completeTask(task.taskId)}
+    style={completeButton}
+    onClick={() => completeTask(task.taskId)}
+    onMouseEnter={(e)=>{
+        e.target.style.background="#15803D";
+        }}
+        onMouseLeave={(e)=>{
+        e.target.style.background="#22C55E";
+        }}
 >
-Complete
+    Complete
 </button>
 
 <button
-style={failButton}
-onClick={()=>failTask(task.taskId)}
+    style={failButton}
+    onClick={() => failTask(task.taskId)}
+    onMouseEnter={(e)=>{
+        e.target.style.background="#B91C1C";
+        }}
+        onMouseLeave={(e)=>{
+        e.target.style.background="#EF4444";
+        }}
 >
-Fail
+    Fail
 </button>
+</>
+
+)}
 </>
 
 )}
@@ -248,6 +338,12 @@ Fail
 <button
 style={retryButton}
 onClick={()=>retryTask(task.taskId)}
+onMouseEnter={(e)=>{
+        e.target.style.background="#D97706";
+        }}
+        onMouseLeave={(e)=>{
+        e.target.style.background="#F59E0B";
+        }}
 >
 Retry
 </button>
@@ -306,13 +402,14 @@ const summaryContainer = {
     marginBottom: "40px"
 };
 
-const summaryCard = {
-    flex: 1,
-    background: "white",
-    padding: "20px",
-    textAlign: "center",
-    borderRadius: "12px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+const summaryCard={
+    flex:1,
+    background:"#FFF",
+    padding:"30px",
+    borderRadius:"18px",
+    textAlign:"center",
+    boxShadow:"0 8px 24px rgba(0,0,0,.08)",
+    border:"1px solid #E5E7EB"
 };
 
 const flowContainer = {
@@ -321,20 +418,20 @@ const flowContainer = {
     alignItems: "center"
 };
 
-const taskCard = {
-    width: "350px",
-    background: "white",
-    padding: "20px",
-    borderRadius: "12px",
-    textAlign: "center",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-    borderLeft: "5px solid #2563EB"
+const taskCard={
+    width:"390px",
+    background:"white",
+    padding:"26px",
+    borderRadius:"18px",
+    textAlign:"center",
+    boxShadow:"0 8px 20px rgba(0,0,0,.08)",
+    transition:"0.2s"
 };
 
 const arrow = {
-    fontSize: "42px",
+    fontSize: "48px",
     color: "#2563EB",
-    margin: "15px 0",
+    margin: "18px 0",
     textAlign: "center"
 };
 const auditButton = {
@@ -372,5 +469,24 @@ const retryButton = {
     padding:"8px 15px",
     borderRadius:"6px",
     cursor:"pointer"
+};
+const stopButton = {
+    background: "#DC2626",
+    color: "white",
+    border:"none",
+    padding:"10px 20px",
+    borderRadius:"8px",
+    cursor:"pointer",
+    marginBottom:"30px"
+};
+
+const resumeButton = {
+    background: "#16A34A",
+    color: "white",
+    border:"none",
+    padding:"10px 20px",
+    borderRadius:"8px",
+    cursor:"pointer",
+    marginBottom:"30px"
 };
 export default ExecutionMonitor;
