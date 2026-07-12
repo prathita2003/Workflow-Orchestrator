@@ -21,6 +21,15 @@ function KafkaMonitor() {
     return (
         <>
             <h1>Kafka Event Monitor</h1>
+            <h5 style={{ color: '#d71a1a', fontWeight: 'bold' }}>
+  ⚠ Hosted Demo Notice<br/>
+
+Apache Kafka powers the distributed workflow execution engine in the local version of this project.<br/>
+
+Since Render does not provide a managed Kafka service, the hosted demo does not include live Kafka streaming.<br/>
+
+All Kafka-based functionality can be experienced by running the project locally using Docker Compose. See the README for setup instructions.
+</h5>
 
             <p
                 style={{

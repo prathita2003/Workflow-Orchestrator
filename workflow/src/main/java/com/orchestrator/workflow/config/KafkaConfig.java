@@ -17,11 +17,16 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import java.util.*;
 
 @EnableKafka
 @Configuration
+@ConditionalOnProperty(
+    name = "app.kafka.enabled",
+    havingValue = "true"
+)
 public class KafkaConfig
 {
     @Bean

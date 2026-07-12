@@ -1,14 +1,8 @@
 spring:
-
   datasource:
     url: jdbc:postgresql://postgres:5432/workflowdb
     username: postgres
     password: postgres
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
 
   kafka:
     bootstrap-servers: kafka:9092
@@ -16,15 +10,10 @@ spring:
     consumer:
       group-id: workflow-group
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
-server:
-  port: 8080
+app:
+  kafka:
+    enabled: true
 
 ml:
   service:

@@ -3,3 +3,18 @@ spring:
     url: jdbc:postgresql://localhost:5432/orchestrator_db
     username: postgres
     password: 12345678
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    consumer:
+      group-id: workflow-group
+      auto-offset-reset: earliest
+
+app:
+  kafka:
+    enabled: true
+
+ml:
+  service:
+    url: http://localhost:8000

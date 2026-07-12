@@ -2,7 +2,7 @@ package com.orchestrator.workflow.service;
 
 import com.orchestrator.workflow.entity.*;
 import com.orchestrator.workflow.enums.ExecutionStatus;
-import com.orchestrator.workflow.kafka.WorkflowProducer;
+import com.orchestrator.workflow.kafka.*;
 import com.orchestrator.workflow.repository.*;
 import com.orchestrator.workflow.exception.*;
 import com.orchestrator.workflow.dto.*;
@@ -21,7 +21,7 @@ public class ExecutionService {
     private final WorkflowExecutionRepository wer;
     private final TaskExecutionRepository ter;
     private final TaskDependencyRepository tdr;
-    private final WorkflowProducer producer;
+    private final WorkflowEventPublisher producer;
     private final AuditService as;
     private static final int MAX_RETRIES=3;
 

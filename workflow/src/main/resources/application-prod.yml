@@ -3,3 +3,15 @@ spring:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+app:
+  kafka:
+    enabled: false
+
+ml:
+  service:
+    url: ${ML_SERVICE_URL}

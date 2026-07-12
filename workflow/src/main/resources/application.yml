@@ -2,17 +2,5 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-
-    consumer:
-      group-id: workflow-group
-      auto-offset-reset: earliest
-
 server:
   port: ${PORT:8080}

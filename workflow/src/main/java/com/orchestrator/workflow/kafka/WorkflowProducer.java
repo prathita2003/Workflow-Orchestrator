@@ -6,10 +6,15 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Service
 @RequiredArgsConstructor
-public class WorkflowProducer {
+@ConditionalOnProperty(
+        name = "app.kafka.enabled",
+        havingValue = "true"
+)
+public class WorkflowProducer implements WorkflowEventPublisher {
 
     private final KafkaTemplate<String, WorkflowEvent> kafkaTemplate;
 

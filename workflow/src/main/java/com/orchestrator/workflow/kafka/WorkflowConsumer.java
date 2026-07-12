@@ -13,12 +13,17 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class WorkflowConsumer {
+@ConditionalOnProperty(
+    name = "app.kafka.enabled",
+    havingValue = "true"
+)
+public class WorkflowConsumer{
 
     private final ExecutionService es;
     private final EventStore store;
