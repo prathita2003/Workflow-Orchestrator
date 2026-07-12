@@ -183,25 +183,59 @@ for(TaskExecution nextTask : executableTasks)
         }
     }
     public void failTask(Long wfeId, Long taskId)
+{
+    TaskExecution tex =
+            ter.findByWorkflowExecutionIdAndTaskId(wfeId, taskId)
+                    .orElseThrow();
+
+    int currentRetry = tex.getRetryCount();
+
+    if(currentRetry < MAX_RETRIES)
     {
-        TaskExecution tex=ter.findByWorkflowExecutionIdAndTaskId(wfeId, taskId).orElseThrow();
-        int currentRetry=tex.getRetryCount();
-        if(currentRetry<MAX_RETRIES)
-        {
-            tex.setRetryCount(currentRetry+1);
-            as.logEvent(wfeId, "RETRY_TRIGGERED","Retry "+tex.getRetryCount()+" for task "+taskId);
-            tex.setStatus(ExecutionStatus.PENDING);
-            System.out.println("Retry "+(currentRetry+1)+" scheduled for task "+taskId);
-        }
-        else
-        {
-            tex.setStatus(ExecutionStatus.FAILED);
-            failWorkflow(tex.getWorkflowExecution());
-            as.logEvent(wfeId, "TASK_FAILED", "Task "+taskId+" failed permanently");
-            System.out.println("Task "+taskId+" permanently failed");
-        }
+        tex.setRetryCount(currentRetry + 1);
+
+        tex.setStatus(ExecutionStatus.PENDING);
+
         ter.save(tex);
+
+        as.logEvent(
+                wfeId,
+                "RETRY_TRIGGERED",
+                "Retry " + tex.getRetryCount() + " for task " + taskId
+        );
+
+        System.out.println(
+                "Retry " + tex.getRetryCount() +
+                        " scheduled for task " + taskId
+        );
+
+        WorkflowExecution execution = tex.getWorkflowExecution();
+
+        execution.setStatus(ExecutionStatus.RUNNING);
+
+        wer.save(execution);
+
+        startNextExecutableTasks(execution);
+
+        return;
     }
+
+    tex.setStatus(ExecutionStatus.FAILED);
+
+    ter.save(tex);
+
+    failWorkflow(tex.getWorkflowExecution());
+
+    as.logEvent(
+            wfeId,
+            "TASK_FAILED",
+            "Task " + taskId + " failed permanently"
+    );
+
+    System.out.println(
+            "Task " + taskId + " permanently failed"
+    );
+}
     
     private void failWorkflow(WorkflowExecution wfe)
     {
@@ -274,7 +308,7 @@ for(TaskExecution nextTask : executableTasks)
     return ter.findByWorkflowExecution(execution);
 }
     
-    @Transactional
+@Transactional
 public TaskExecution retryTask(Long executionId, Long taskId)
 {
     WorkflowExecution execution =
@@ -290,26 +324,26 @@ public TaskExecution retryTask(Long executionId, Long taskId)
                     .orElseThrow(() ->
                             new RuntimeException("Task execution not found"));
 
-    if(taskExecution.getStatus() != ExecutionStatus.FAILED)
-    {
-        throw new RuntimeException("Only failed tasks can be retried.");
-    }
-
     taskExecution.setStatus(ExecutionStatus.PENDING);
 
-ter.save(taskExecution);
+    execution.setStatus(ExecutionStatus.RUNNING);
 
-startNextExecutableTasks(execution);
+    wer.save(execution);
 
-return taskExecution;
+    ter.save(taskExecution);
+
+    startNextExecutableTasks(execution);
+
+    return taskExecution;
 }
     private void startNextExecutableTasks(WorkflowExecution wfe)
 {
-    List<TaskExecution> executableTasks = getExecutableTasks(wfe);
+    List<TaskExecution> executableTasks =
+            getExecutableTasks(wfe);
 
     for(TaskExecution taskExecution : executableTasks)
     {
-        if(taskExecution.getStatus() == ExecutionStatus.PENDING)
+        if(taskExecution.getStatus()==ExecutionStatus.PENDING)
         {
             taskExecution.setStatus(ExecutionStatus.RUNNING);
 
@@ -318,27 +352,24 @@ return taskExecution;
             as.logEvent(
                     wfe.getId(),
                     "TASK_STARTED",
-                    "Task " + taskExecution.getTask().getId() + " started"
+                    "Task " +
+                    taskExecution.getTask().getId() +
+                    " started"
             );
 
-            try
-            {
-                producer.publishTaskStartedEvent(
-                        wfe.getId(),
-                        taskExecution.getTask().getId()
-                );
-            }
-            catch(Exception e)
-            {
-                System.out.println("Kafka unavailable");
-            }
+            producer.publishTaskStartedEvent(
+                    wfe.getId(),
+                    taskExecution.getTask().getId()
+            );
 
             System.out.println(
-                    "Automatically started task "
-                            + taskExecution.getTask().getName()
+                    "Automatically started "
+                    + taskExecution.getTask().getName()
             );
         }
     }
+
+    checkWorkflowCompletion(wfe);
 }
     public void stopWorkflow(Long id)
 {
@@ -420,7 +451,6 @@ for (TaskExecution taskExecution : taskExecutions)
 
 startNextExecutableTasks(execution);
 
-    startNextExecutableTasks(execution);
 
     producer.publishWorkflowResumedEvent(execution.getId());
 
