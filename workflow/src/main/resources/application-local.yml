@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/orchestrator_db
     username: postgres
-    password: 12345678
+    password: password
 
   kafka:
     bootstrap-servers: localhost:9092
