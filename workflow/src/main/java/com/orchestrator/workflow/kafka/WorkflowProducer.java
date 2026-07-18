@@ -28,7 +28,7 @@ public class WorkflowProducer implements WorkflowEventPublisher {
         /*kafkaTemplate.send("workflow-events",event);
         System.out.println("EVENT PUBLISHED: " + event);*/
         try {
-    kafkaTemplate.send("workflow-events", event).get();
+    kafkaTemplate.send("workflow-events", event);
     System.out.println("========== EVENT PUBLISHED SUCCESSFULLY ==========");
     System.out.println(event);
 }
