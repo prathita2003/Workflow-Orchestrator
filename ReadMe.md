@@ -195,6 +195,17 @@ The application is deployed using Render and Neon PostgreSQL.
 | Machine Learning Service | Render Web Service |
 | Database | Neon PostgreSQL |
 
+## Demo Credentials
+
+You can explore the application using the following demo account:
+
+**Username:** admin
+**Password:** admin123
+
+Register a new account using the profiles page on Admin Profile.
+
+> Note: This project uses JWT-based authentication. The demo account has administrative privileges to showcase all features.
+
 ---
 
 ## Future Improvements
