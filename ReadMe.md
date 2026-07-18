@@ -34,16 +34,6 @@ The application combines an event-driven backend with an interactive React front
 
 ## System Architecture
 
-```text
-                React Frontend
-                       │
-                       ▼
-              Spring Boot Backend
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
-   PostgreSQL      Kafka       ML Service
-```
-
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/dafe5c4c-dd20-43a5-8cc7-20dcb2aac8a3" />
 
 
