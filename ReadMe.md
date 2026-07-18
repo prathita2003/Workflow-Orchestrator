@@ -44,7 +44,8 @@ The application combines an event-driven backend with an interactive React front
    PostgreSQL      Kafka       ML Service
 ```
 
-**[INSERT IMAGE 1 HERE — System Architecture Diagram]**
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/dafe5c4c-dd20-43a5-8cc7-20dcb2aac8a3" />
+
 
 ---
 
@@ -198,7 +199,7 @@ The application is deployed using Render and Neon PostgreSQL.
 ## Demo Credentials
 
 You can explore the application using the following demo account:
-**Link:** https://workflow-orchestrator-ct3q.onrender.com/dashboard
+**Link:** https://workflow-orchestrator-ct3q.onrender.com
 
 **Username:** admin
 **Password:** admin123
