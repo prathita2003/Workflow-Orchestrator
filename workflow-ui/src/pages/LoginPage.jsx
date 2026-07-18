@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
 import api from "../services/api";
 
 function LoginPage() {
@@ -12,13 +11,13 @@ function LoginPage() {
     const login = async () => {
         try {
             const response = await api.post("/auth/login", {
-            username,
-            password
-            }); 
+                username,
+                password
+            });
 
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("username", response.data.username);
-            localStorage.setItem("role", response.data.role);
+            sessionStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("username", response.data.username);
+            sessionStorage.setItem("role", response.data.role);
 
             navigate("/dashboard");
         } catch (err) {
@@ -27,7 +26,7 @@ function LoginPage() {
         }
     };
 
-    if (localStorage.getItem("token")) {
+    if (sessionStorage.getItem("token")) {
         return <Navigate to="/dashboard" />;
     }
 
@@ -60,7 +59,7 @@ function LoginPage() {
                 </h1>
 
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         e.preventDefault();
                         login();
                     }}
@@ -69,7 +68,7 @@ function LoginPage() {
                         style={input}
                         placeholder="Username"
                         value={username}
-                        onChange={e => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
 
                     <input
@@ -77,7 +76,7 @@ function LoginPage() {
                         type="password"
                         placeholder="Password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
 
                     <button
