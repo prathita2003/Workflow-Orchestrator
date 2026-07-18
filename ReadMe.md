@@ -34,7 +34,7 @@ The application combines an event-driven backend with an interactive React front
 
 ## System Architecture
 
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/dafe5c4c-dd20-43a5-8cc7-20dcb2aac8a3" />
+<img width="768" height="512" alt="image" src="https://github.com/user-attachments/assets/dafe5c4c-dd20-43a5-8cc7-20dcb2aac8a3" />
 
 
 ---
