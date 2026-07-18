@@ -198,6 +198,7 @@ The application is deployed using Render and Neon PostgreSQL.
 ## Demo Credentials
 
 You can explore the application using the following demo account:
+**Link:** https://workflow-orchestrator-ct3q.onrender.com/dashboard
 
 **Username:** admin
 **Password:** admin123
