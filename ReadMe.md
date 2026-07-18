@@ -216,3 +216,4 @@ The application is deployed using Render and Neon PostgreSQL.
 Bachelor of Technology (Mechanical Engineering)  
 Minor in Computer Science & Engineering  
 PES University, Bengaluru
+Mechanical Engineer and Java Full Stack Developer
