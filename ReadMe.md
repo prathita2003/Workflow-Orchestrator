@@ -195,8 +195,17 @@ You can explore the application using the following demo account:
 **Password:** admin123
 
 Register a new account using the profiles page on Admin Profile.
-
 > Note: This project uses JWT-based authentication. The demo account has administrative privileges to showcase all features.
+
+### Deployment Note
+This project follows a microservices architecture with the backend and ML prediction service deployed independently on Render's free tier. Due to Render's automatic sleep policy for inactive services, the ML service may require a brief warm-up after periods of inactivity.
+
+If the prediction feature is unavailable on the first attempt, please visit the ML service URL once, wait 20–30 seconds, and then retry the prediction.
+
+- Frontend: https://workflow-orchestrator-ct3q.onrender.com
+- Backend: https://workflow-backend-h5ew.onrender.com
+- ML Service: https://workflow-orchestrator-3aaw.onrender.com
+
 
 ---
 
