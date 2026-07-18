@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../services/api";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -10,13 +11,10 @@ function LoginPage() {
 
     const login = async () => {
         try {
-            const response = await axios.post(
-                "https://dashboard.render.com/project/prj-d7n35sgk1i2s739elf7g",
-                {
-                    username,
-                    password
-                }
-            );
+            const response = await api.post("/auth/login", {
+            username,
+            password
+            }); 
 
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("username", response.data.username);
