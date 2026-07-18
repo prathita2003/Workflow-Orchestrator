@@ -59,9 +59,7 @@ The application combines an event-driven backend with an interactive React front
 ## 1. Login
 
 Secure JWT-based authentication supporting role-based access.
-
-<img width="768" height="512" alt="image" src="https://github.com/user-attachments/assets/fc8e1886-620f-4117-8d3d-141af03e25fc" />
-
+<img width="640" height="340" alt="Login" src="https://github.com/user-attachments/assets/d735d2c8-db38-46c6-ad15-ec167e59c665" />
 
 ---
 
