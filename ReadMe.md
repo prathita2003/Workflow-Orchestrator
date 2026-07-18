@@ -67,7 +67,8 @@ Secure JWT-based authentication supporting role-based access.
 
 Displays workflow statistics, execution metrics, and recent activity.
 
-**[INSERT IMAGE 3 HERE — Dashboard]**
+<img width="640" height="340" alt="2  Dashboard" src="https://github.com/user-attachments/assets/495dfeaf-ffe7-4443-afbc-fb70e205fda8" />
+
 
 ---
 
@@ -75,7 +76,7 @@ Displays workflow statistics, execution metrics, and recent activity.
 
 Manage workflows by creating, editing, cloning, and deleting workflows.
 
-**[INSERT IMAGE 4 HERE — Workflow List]**
+<img width="640" height="340" alt="4  Workflow List" src="https://github.com/user-attachments/assets/3bac6f7d-1076-4f73-ad01-b413ae216062" />
 
 ---
 
@@ -83,7 +84,9 @@ Manage workflows by creating, editing, cloning, and deleting workflows.
 
 Configure workflow tasks and define task dependencies.
 
-**[INSERT IMAGE 5 HERE — Workflow Details / DAG View]**
+<img width="640" height="340" alt="5  create Workflow" src="https://github.com/user-attachments/assets/1145f6a6-5969-41c6-b4ed-4db4decdaec5" />
+
+<img width="640" height="340" alt="5  create workflow 2" src="https://github.com/user-attachments/assets/7249b9fb-ac71-4146-a830-03af3cd593ea" />
 
 ---
 
@@ -91,7 +94,8 @@ Configure workflow tasks and define task dependencies.
 
 Track workflow execution in real time with task status updates.
 
-**[INSERT IMAGE 6 HERE — Execution Monitor]**
+<img width="640" height="340![Uploading 5. create Workflow.png…]()
+" alt="6  Execution Monitor" src="https://github.com/user-attachments/assets/b6fbbcdd-62d6-4450-bb84-dd6efde27dbb" />
 
 ---
 
@@ -99,7 +103,8 @@ Track workflow execution in real time with task status updates.
 
 Detailed view of workflow execution including task progress and metadata.
 
-**[INSERT IMAGE 7 HERE — Execution Details]**
+<img width="640" height="340" alt="6  Execution Monitor" src="https://github.com/user-attachments/assets/0cbf957c-7f9c-4462-a421-2567181cc231" />
+
 
 ---
 
@@ -107,7 +112,8 @@ Detailed view of workflow execution including task progress and metadata.
 
 Predict workflow completion time before execution using the integrated ML service.
 
-**[INSERT IMAGE 8 HERE — ML Prediction]**
+<img width="640" height="340" alt="8  ML Service" src="https://github.com/user-attachments/assets/a53274f8-07e3-4e8a-a3bf-b06367982305" />
+
 
 ---
 
@@ -122,8 +128,7 @@ Monitor workflow lifecycle events published through Apache Kafka.
 ## 9. Audit Logs
 
 Track user activities and important workflow operations.
-
-**[INSERT IMAGE 10 HERE — Audit Logs]**
+<img width="640" height="340" alt="10  Audit Timeline" src="https://github.com/user-attachments/assets/c9cb6dc3-e2eb-40b7-aa5d-cef4d5e1d41e" />
 
 ---
 
@@ -131,7 +136,8 @@ Track user activities and important workflow operations.
 
 Manage application users and their assigned roles.
 
-**[INSERT IMAGE 11 HERE — User Management]**
+<img width="640" height="340" alt="11  User Management" src="https://github.com/user-attachments/assets/b6b5fb86-c1a5-46ea-a814-c03d3e2908fa" />
+
 
 ---
 
