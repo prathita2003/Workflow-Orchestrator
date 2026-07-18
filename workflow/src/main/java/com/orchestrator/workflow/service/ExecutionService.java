@@ -30,7 +30,7 @@ public class ExecutionService {
             WorkflowExecutionRepository wer,
             TaskExecutionRepository ter,
             TaskDependencyRepository tdr,
-            WorkflowProducer producer,
+            WorkflowEventPublisher producer,
             AuditService as
     ) {
         this.wr=wr;
