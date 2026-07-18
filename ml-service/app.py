@@ -2,13 +2,22 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import pandas as pd
+import subprocess
+from pathlib import Path
 
 #python -m uvicorn app:app --reload
 
 app = FastAPI(title="Workflow ML Service")
 
 # Load trained model
-model = joblib.load("workflow_model.pkl")
+MODEL_FILE = "workflow_model.pkl"
+
+if not Path(MODEL_FILE).exists():
+    print("Model not found. Training a new model...")
+    subprocess.run(["python", "train_model.py"], check=True)
+
+print("Loading model...")
+model = joblib.load(MODEL_FILE)
 
 
 class PredictionRequest(BaseModel):
