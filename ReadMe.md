@@ -120,8 +120,8 @@ Predict workflow completion time before execution using the integrated ML servic
 ## 8. Kafka Event Monitoring
 
 Monitor workflow lifecycle events published through Apache Kafka.
+<img width="640" height="340" alt="9  Kafka" src="https://github.com/user-attachments/assets/bea2ff78-8204-4a34-b8bf-e067a74b74d6" />
 
-**[INSERT IMAGE 9 HERE — Kafka Monitor]**
 
 ---
 
